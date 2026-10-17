@@ -3,17 +3,19 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>A Special Surprise For You! ✈️🌴</title>
+  <title>A VIP Surprise For You! ✈️🌴</title>
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
   <style>
     :root {
       --primary: #f43f5e;
-      --primary-hover: #e11d48;
-      --sunset-gold: #f59e0b;
+      --primary-dark: #e11d48;
+      --gold: #d97706;
+      --gold-light: #fef3c7;
       --ocean-blue: #0284c7;
-      --bg-gradient: linear-gradient(135deg, #fff1f2 0%, #fef3c7 50%, #e0f2fe 100%);
-      --card-bg: rgba(255, 255, 255, 0.92);
-      --text-main: #1e293b;
+      --teal: #0d9488;
+      --bg-gradient: linear-gradient(135deg, #fff1f2 0%, #fef3c7 40%, #e0f2fe 100%);
+      --card-bg: rgba(255, 255, 255, 0.94);
+      --text-main: #0f172a;
       --text-muted: #64748b;
     }
 
@@ -32,56 +34,75 @@
       justify-content: center;
       align-items: center;
       padding: 16px;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    /* Floating Background Tropical Emojis */
+    .bg-emoji {
+      position: absolute;
+      font-size: 24px;
+      opacity: 0.25;
+      user-select: none;
+      animation: float 6s ease-in-out infinite alternate;
+    }
+
+    @keyframes float {
+      from { transform: translateY(0px) rotate(0deg); }
+      to { transform: translateY(-15px) rotate(10deg); }
     }
 
     .container {
       width: 100%;
       max-width: 440px;
       margin: auto;
+      position: relative;
+      z-index: 2;
     }
 
     .card {
       background: var(--card-bg);
-      backdrop-filter: blur(12px);
-      border-radius: 24px;
+      backdrop-filter: blur(16px);
+      border-radius: 28px;
       padding: 24px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.08), 0 1px 3px rgba(0,0,0,0.05);
-      border: 1px solid rgba(255,255,255,0.8);
+      box-shadow: 0 15px 35px rgba(0,0,0,0.1), 0 2px 8px rgba(0,0,0,0.04);
+      border: 1px solid rgba(255, 255, 255, 0.9);
       animation: fadeIn 0.4s ease-out;
       position: relative;
     }
 
     @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(12px); }
+      from { opacity: 0; transform: translateY(16px); }
       to { opacity: 1; transform: translateY(0); }
     }
 
-    /* Quiz Header */
+    /* Progress Indicator */
     .progress-bar-bg {
-      height: 6px;
+      height: 8px;
       background: #e2e8f0;
       border-radius: 99px;
       overflow: hidden;
-      margin-bottom: 20px;
+      margin-bottom: 22px;
     }
+
     .progress-bar-fill {
       height: 100%;
-      background: linear-gradient(90deg, #f43f5e, #f59e0b);
+      background: linear-gradient(90deg, #f43f5e, #f59e0b, #10b981);
       width: 33.3%;
-      transition: width 0.3s ease;
+      transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
     .q-step {
-      font-size: 12px;
-      font-weight: 700;
+      font-size: 11px;
+      font-weight: 800;
       color: var(--primary);
       text-transform: uppercase;
-      letter-spacing: 0.05em;
+      letter-spacing: 0.1em;
       margin-bottom: 6px;
     }
 
     h2 {
-      font-size: 20px;
+      font-size: 21px;
       font-weight: 800;
       color: #0f172a;
       line-height: 1.35;
@@ -94,31 +115,38 @@
 
     input[type="text"] {
       width: 100%;
-      padding: 14px 16px;
+      padding: 16px 18px;
       font-size: 16px;
+      font-weight: 600;
       border: 2px solid #cbd5e1;
-      border-radius: 14px;
+      border-radius: 16px;
       outline: none;
-      transition: border-color 0.2s;
+      transition: all 0.2s;
       background: #ffffff;
+      color: var(--text-main);
     }
 
     input[type="text"]:focus {
       border-color: var(--primary);
+      box-shadow: 0 0 0 4px rgba(244, 63, 94, 0.15);
     }
 
     .primary-btn {
       width: 100%;
-      padding: 15px;
+      padding: 16px;
       font-size: 16px;
-      font-weight: 700;
-      background: linear-gradient(135deg, var(--primary), #e11d48);
+      font-weight: 800;
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
       color: white;
       border: none;
-      border-radius: 14px;
+      border-radius: 16px;
       cursor: pointer;
-      box-shadow: 0 4px 14px rgba(244, 63, 94, 0.35);
+      box-shadow: 0 6px 18px rgba(244, 63, 94, 0.35);
       transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
     }
 
     .primary-btn:active {
@@ -128,23 +156,22 @@
     .error-msg {
       color: #e11d48;
       font-size: 13px;
-      font-weight: 600;
-      margin-top: 8px;
+      font-weight: 700;
+      margin-top: 10px;
       display: none;
     }
 
-    /* Ticket Reveal Styling */
     .hidden {
       display: none !important;
     }
 
+    /* Wipe Container */
     .reveal-wrapper {
       position: relative;
-      border-radius: 24px;
+      border-radius: 28px;
       overflow: hidden;
     }
 
-    /* Wipe Canvas Game */
     #wipeCanvas {
       position: absolute;
       top: 0;
@@ -152,94 +179,166 @@
       width: 100%;
       height: 100%;
       z-index: 10;
-      border-radius: 24px;
+      border-radius: 28px;
       cursor: pointer;
       touch-action: none;
-      transition: opacity 0.5s ease;
+      transition: opacity 0.6s ease;
     }
 
+    /* Fancy Luxury Ticket */
     .ticket-card {
       background: #ffffff;
-      border-radius: 20px;
+      border-radius: 22px;
       overflow: hidden;
       border: 1px solid #e2e8f0;
-      box-shadow: 0 8px 25px rgba(0,0,0,0.06);
-      margin: 16px 0;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+      margin: 18px 0;
+      position: relative;
     }
 
     .ticket-header {
       background: linear-gradient(135deg, #0284c7, #0d9488);
       color: white;
-      padding: 16px;
+      padding: 18px 20px;
       text-align: center;
+      position: relative;
     }
 
-    .ticket-header h3 {
-      font-size: 13px;
+    .vip-badge {
+      display: inline-block;
+      background: linear-gradient(135deg, #f59e0b, #d97706);
+      color: #ffffff;
+      font-size: 10px;
+      font-weight: 900;
+      padding: 4px 10px;
+      border-radius: 99px;
       letter-spacing: 0.1em;
-      opacity: 0.9;
+      margin-bottom: 6px;
+      box-shadow: 0 2px 8px rgba(245, 158, 11, 0.4);
     }
 
-    .ticket-header .route {
-      font-size: 22px;
-      font-weight: 800;
-      margin-top: 4px;
+    .route-container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 8px;
+    }
+
+    .city-code {
+      font-size: 24px;
+      font-weight: 900;
+      letter-spacing: 0.05em;
+    }
+
+    .city-name {
+      font-size: 11px;
+      opacity: 0.85;
+      font-weight: 600;
+    }
+
+    .flight-path {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      padding: 0 10px;
+    }
+
+    .plane-line {
+      width: 100%;
+      height: 2px;
+      background: rgba(255,255,255,0.4);
+      border-dasharray: 4px;
+    }
+
+    .plane-icon {
+      font-size: 18px;
+      position: absolute;
+      animation: flyPlane 3s ease-in-out infinite alternate;
+    }
+
+    @keyframes flyPlane {
+      from { transform: translateX(-15px); }
+      to { transform: translateX(15px); }
     }
 
     .ticket-body {
       padding: 20px;
     }
 
-    .ticket-row {
-      display: flex;
-      justify-content: space-between;
-      margin-bottom: 12px;
+    .ticket-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin-bottom: 14px;
     }
 
     .ticket-label {
-      font-size: 11px;
+      font-size: 10px;
       color: var(--text-muted);
       text-transform: uppercase;
-      font-weight: 600;
+      font-weight: 700;
+      letter-spacing: 0.05em;
     }
 
     .ticket-val {
-      font-size: 15px;
-      font-weight: 700;
+      font-size: 14px;
+      font-weight: 800;
       color: var(--text-main);
       margin-top: 2px;
     }
 
     .price-tag {
-      background: #ecfdf5;
-      border: 1px solid #10b981;
-      padding: 10px;
-      border-radius: 12px;
+      background: linear-gradient(135deg, #ecfdf5, #d1fae5);
+      border: 1.5px dashed #10b981;
+      padding: 14px;
+      border-radius: 16px;
       text-align: center;
-      margin-top: 12px;
+      margin-top: 10px;
     }
 
     .price-tag .amount {
-      font-size: 22px;
+      font-size: 26px;
       font-weight: 900;
       color: #059669;
+      line-height: 1.1;
+      margin: 4px 0;
     }
 
     .price-tag .note {
       font-size: 12px;
-      font-weight: 700;
+      font-weight: 800;
       color: #047857;
     }
 
     .message-box {
       background: #fff1f2;
       border-left: 4px solid var(--primary);
-      padding: 14px;
-      border-radius: 8px;
+      padding: 16px;
+      border-radius: 14px;
       font-size: 14px;
-      line-height: 1.5;
+      line-height: 1.55;
       color: #881337;
       margin-bottom: 16px;
+      font-weight: 500;
+    }
+
+    /* Barcode simulation */
+    .barcode-strip {
+      height: 30px;
+      background: repeating-linear-gradient(
+        90deg,
+        #1e293b,
+        #1e293b 2px,
+        #ffffff 2px,
+        #ffffff 5px,
+        #1e293b 5px,
+        #1e293b 9px
+      );
+      opacity: 0.75;
+      margin-top: 16px;
+      border-radius: 4px;
     }
 
     .shake {
@@ -254,6 +353,12 @@
   </style>
 </head>
 <body>
+
+  <!-- Floating Background Elements -->
+  <div class="bg-emoji" style="top: 10%; left: 8%;">🌴</div>
+  <div class="bg-emoji" style="top: 15%; right: 10%; animation-delay: 1s;">🌺</div>
+  <div class="bg-emoji" style="bottom: 12%; left: 12%; animation-delay: 2s;">✈️</div>
+  <div class="bg-emoji" style="bottom: 18%; right: 8%; animation-delay: 1.5s;">🍹</div>
 
   <div class="container">
     
@@ -297,43 +402,55 @@
       </div>
     </div>
 
-    <!-- REVEAL CONTAINER WITH WIPE CANVAS -->
+    <!-- REVEAL CONTAINER WITH SCRATCH CANVAS -->
     <div id="revealWrapper" class="reveal-wrapper hidden">
       <canvas id="wipeCanvas"></canvas>
 
       <div id="revealCard" class="card">
-        <div style="text-align: center; margin-bottom: 12px;">
-          <span style="font-size: 40px;">🎂🎉✈️</span>
-          <h1 style="font-size: 22px; font-weight: 800; color: #0f172a; margin-top: 4px;">SURPRISE!</h1>
-          <p style="font-size: 13px; color: var(--text-muted); font-weight: 600;">Early Birthday Gift Unlocked 🎁</p>
+        <div style="text-align: center; margin-bottom: 14px;">
+          <span style="font-size: 44px;">🎂🎉✈️</span>
+          <h1 style="font-size: 24px; font-weight: 900; color: #0f172a; margin-top: 4px;">SURPRISE BESTIE!</h1>
+          <p style="font-size: 13px; color: var(--text-muted); font-weight: 700;">Early Birthday Gift Unlocked 🎁</p>
         </div>
 
         <div class="message-box">
-          I know you were expecting to pay for your own flight to Bali... but consider your ticket <strong>100% paid for by me!</strong> Early birthday gift for you. 🧳✈️❤️
+          I know you were expecting to pay for your own flight to Bali... but consider your flight ticket <strong>100% paid for by me!</strong> Early birthday present for you!🧳✈️❤️
         </div>
 
         <div class="ticket-card">
           <div class="ticket-header">
-            <h3>BOARDING PASS VOUCHER</h3>
-            <div class="route">SINGAPORE ✈️ BALI (DPS)</div>
-          </div>
-          <div class="ticket-body">
-            <div class="ticket-row">
+            <div class="vip-badge">✨ Flight VOUCHER ✨</div>
+            <div class="route-container">
               <div>
-                <div class="ticket-label">Passenger</div>
-                <div class="ticket-val">The Birthday Girl / Jing Ting</div>
+                <div class="city-code">SIN</div>
+                <div class="city-name">Singapore</div>
               </div>
-              <div style="text-align: right;">
-                <div class="ticket-label">Seat Class</div>
-                <div class="ticket-val">Sponsored</div>
+              <div class="flight-path">
+                <div class="plane-line"></div>
+                <div class="plane-icon">✈️</div>
+              </div>
+              <div>
+                <div class="city-code">DPS</div>
+                <div class="city-name">Bali</div>
               </div>
             </div>
-            <div class="ticket-row">
+          </div>
+
+          <div class="ticket-body">
+            <div class="ticket-grid">
+              <div>
+                <div class="ticket-label">Passenger</div>
+                <div class="ticket-val">Oh Jing Ting</div>
+              </div>
+              <div>
+                <div class="ticket-label">Seat Class</div>
+                <div class="ticket-val" style="color: var(--primary);">Sponsored 🎁</div>
+              </div>
               <div>
                 <div class="ticket-label">Baggage Allowance</div>
-                <div class="ticket-val">Cabin Luggage Only (7kg)</div>
+                <div class="ticket-val">Cabin Luggage (7kg)</div>
               </div>
-              <div style="text-align: right;">
+              <div>
                 <div class="ticket-label">Status</div>
                 <div class="ticket-val" style="color: #059669;">CONFIRMED ✅</div>
               </div>
@@ -342,8 +459,10 @@
             <div class="price-tag">
               <div class="ticket-label">Your Out-Of-Pocket Flight Cost</div>
               <div class="amount">$0.00</div>
-              <div class="note">✨ Fully Sponsored Early Birthday Present ✨</div>
+              <div class="note">✨ 100% Sponsored Early Birthday Present ✨</div>
             </div>
+
+            <div class="barcode-strip"></div>
           </div>
         </div>
 
@@ -354,6 +473,36 @@
   </div>
 
   <script>
+    // Web Audio Synthesizer Sound Effects (No external dependencies)
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+    function playTone(freq, type = 'sine', duration = 0.15) {
+      if (audioCtx.state === 'suspended') audioCtx.resume();
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.type = type;
+      osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+      gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+      osc.start();
+      osc.stop(audioCtx.currentTime + duration);
+    }
+
+    function playSuccessChime() {
+      playTone(523.25, 'sine', 0.12); // C5
+      setTimeout(() => playTone(659.25, 'sine', 0.12), 100); // E5
+      setTimeout(() => playTone(783.99, 'sine', 0.2), 200); // G5
+    }
+
+    function playCelebrationFanfare() {
+      playTone(523.25, 'triangle', 0.15);
+      setTimeout(() => playTone(659.25, 'triangle', 0.15), 120);
+      setTimeout(() => playTone(783.99, 'triangle', 0.15), 240);
+      setTimeout(() => playTone(1046.50, 'triangle', 0.4), 360);
+    }
+
     // ANSWER CONSTANTS
     const CORRECT_CONCERT_DATE = '21/04/2024';
     const CORRECT_BIRTHDAY_DATE = '08/01/2000'; // Jan 8, 2000
@@ -367,6 +516,7 @@
 
       if (cleanedInput === CORRECT_CONCERT_DATE || cleanedInput === '21/4/2024') {
         errorEl.style.display = 'none';
+        playSuccessChime();
         document.getElementById('q1Section').classList.add('hidden');
         document.getElementById('q2Section').classList.remove('hidden');
         document.getElementById('progressFill').style.width = '66.6%';
@@ -386,6 +536,7 @@
 
       if (cleanedInput === CORRECT_BIRTHDAY_DATE || cleanedInput === '8/1/2000' || cleanedInput === '08/1/2000' || cleanedInput === '8/01/2000') {
         errorEl.style.display = 'none';
+        playSuccessChime();
         document.getElementById('q2Section').classList.add('hidden');
         document.getElementById('q3Section').classList.remove('hidden');
         document.getElementById('progressFill').style.width = '100%';
@@ -405,6 +556,7 @@
 
       if (cleanedInput === CORRECT_HANGOUT_DATE || cleanedInput === '27/1/2024') {
         errorEl.style.display = 'none';
+        playCelebrationFanfare();
         revealSurprise();
       } else {
         errorEl.style.display = 'block';
@@ -418,8 +570,6 @@
       document.getElementById('quizCard').classList.add('hidden');
       const wrapper = document.getElementById('revealWrapper');
       wrapper.classList.remove('hidden');
-
-      // Initialize Wipe Game
       initWipeGame();
     }
 
@@ -436,7 +586,7 @@
       canvas.width = container.offsetWidth;
       canvas.height = container.offsetHeight;
 
-      // Draw Wrapping Overlay
+      // Draw Gold/Pink Ribbon Wrapping Overlay
       const grad = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
       grad.addColorStop(0, '#f43f5e');
       grad.addColorStop(0.5, '#f59e0b');
@@ -444,16 +594,15 @@
       ctx.fillStyle = grad;
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-      // Add Overlay Text Instructions
+      // Gold Sparkle Accents
       ctx.fillStyle = '#ffffff';
-      ctx.font = 'bold 20px -apple-system, sans-serif';
+      ctx.font = 'bold 22px -apple-system, sans-serif';
       ctx.textAlign = 'center';
       ctx.fillText('🎁 YOUR SURPRISE IS HERE!', canvas.width / 2, canvas.height / 2 - 20);
       
       ctx.font = '14px -apple-system, sans-serif';
-      ctx.fillText('✨ Touch & wipe here to reveal! ✨', canvas.width / 2, canvas.height / 2 + 15);
+      ctx.fillText('✨ Touch & wipe here to reveal your pass! ✨', canvas.width / 2, canvas.height / 2 + 15);
 
-      // Setup erasing composite mode
       ctx.globalCompositeOperation = 'destination-out';
 
       function scratch(e) {
@@ -465,7 +614,7 @@
         const y = clientY - rect.top;
 
         ctx.beginPath();
-        ctx.arc(x, y, 35, 0, Math.PI * 2, false);
+        ctx.arc(x, y, 38, 0, Math.PI * 2, false);
         ctx.fill();
 
         checkWipeProgress(ctx, canvas);
@@ -488,16 +637,18 @@
       }
       wipedPercentage = clearPixels / (imgData.data.length / 16);
 
-      if (wipedPercentage > 0.45) {
+      if (wipedPercentage > 0.4) {
         canvasCleared = true;
         canvas.style.opacity = '0';
         setTimeout(() => {
           canvas.style.display = 'none';
-        }, 500);
+        }, 600);
 
-        // Confetti burst on wipe completion
+        playCelebrationFanfare();
+
+        // High Energy Confetti
         confetti({
-          particleCount: 150,
+          particleCount: 160,
           spread: 80,
           origin: { y: 0.6 }
         });
@@ -505,13 +656,14 @@
     }
 
     function claimGift() {
+      playCelebrationFanfare();
       confetti({
-        particleCount: 200,
+        particleCount: 220,
         spread: 100,
         origin: { y: 0.5 }
       });
-      alert("🎉 Flight claimed! Get ready for Bali bestie! ✈️🍹");
+      alert("🎉 Flight claimed! Get ready for Bali! ✈️🍹");
     }
   </script>
 </body>
-</html>
+</html>			
