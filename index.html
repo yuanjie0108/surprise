@@ -3,18 +3,17 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>A VIP Surprise For You! ✈️🌴</title>
+  <title>A Surprise For You! ✈️🌴</title>
+  <!-- Canvas Confetti Library -->
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
   <style>
     :root {
       --primary: #f43f5e;
       --primary-dark: #e11d48;
-      --gold: #d97706;
-      --gold-light: #fef3c7;
-      --ocean-blue: #0284c7;
-      --teal: #0d9488;
+      --scoot-yellow: #ffe600;
+      --scoot-navy: #0f172a;
       --bg-gradient: linear-gradient(135deg, #fff1f2 0%, #fef3c7 40%, #e0f2fe 100%);
-      --card-bg: rgba(255, 255, 255, 0.94);
+      --card-bg: rgba(255, 255, 255, 0.95);
       --text-main: #0f172a;
       --text-muted: #64748b;
     }
@@ -38,13 +37,14 @@
       position: relative;
     }
 
-    /* Floating Background Tropical Emojis */
+    /* Floating Background Emojis */
     .bg-emoji {
       position: absolute;
       font-size: 24px;
       opacity: 0.25;
       user-select: none;
       animation: float 6s ease-in-out infinite alternate;
+      pointer-events: none;
     }
 
     @keyframes float {
@@ -54,7 +54,7 @@
 
     .container {
       width: 100%;
-      max-width: 440px;
+      max-width: 450px;
       margin: auto;
       position: relative;
       z-index: 2;
@@ -76,7 +76,7 @@
       to { opacity: 1; transform: translateY(0); }
     }
 
-    /* Progress Indicator */
+    /* Progress Bar */
     .progress-bar-bg {
       height: 8px;
       background: #e2e8f0;
@@ -88,7 +88,7 @@
     .progress-bar-fill {
       height: 100%;
       background: linear-gradient(90deg, #f43f5e, #f59e0b, #10b981);
-      width: 33.3%;
+      width: 14.28%;
       transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
@@ -102,14 +102,14 @@
     }
 
     h2 {
-      font-size: 21px;
+      font-size: 20px;
       font-weight: 800;
       color: #0f172a;
       line-height: 1.35;
       margin-bottom: 20px;
     }
 
-    .date-input-group {
+    .date-input-group, .mcq-group {
       margin-bottom: 20px;
     }
 
@@ -129,6 +129,44 @@
     input[type="text"]:focus {
       border-color: var(--primary);
       box-shadow: 0 0 0 4px rgba(244, 63, 94, 0.15);
+    }
+
+    /* Styled MCQ Options */
+    .mcq-option {
+      display: flex;
+      align-items: center;
+      padding: 14px 18px;
+      margin-bottom: 10px;
+      border: 2px solid #cbd5e1;
+      border-radius: 16px;
+      cursor: pointer;
+      background: #ffffff;
+      font-weight: 700;
+      font-size: 15px;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      color: var(--text-main);
+      user-select: none;
+    }
+
+    .mcq-option:hover {
+      border-color: var(--primary);
+      background: #fff1f2;
+      transform: translateY(-1px);
+    }
+
+    .mcq-option.selected {
+      border-color: var(--primary);
+      background: #ffe4e6;
+      color: var(--primary-dark);
+      box-shadow: 0 4px 12px rgba(244, 63, 94, 0.15);
+    }
+
+    .mcq-option input[type="radio"] {
+      margin-right: 14px;
+      accent-color: var(--primary);
+      width: 20px;
+      height: 20px;
+      cursor: pointer;
     }
 
     .primary-btn {
@@ -165,7 +203,7 @@
       display: none !important;
     }
 
-    /* Wipe Container */
+    /* Scratch/Wipe Canvas Overlay */
     .reveal-wrapper {
       position: relative;
       border-radius: 28px;
@@ -185,131 +223,252 @@
       transition: opacity 0.6s ease;
     }
 
-    /* Fancy Luxury Ticket */
-    .ticket-card {
+    /* REALISTIC SCOOT BOARDING PASS STYLING */
+    .scoot-ticket {
       background: #ffffff;
-      border-radius: 22px;
+      border-radius: 20px;
       overflow: hidden;
-      border: 1px solid #e2e8f0;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.08);
-      margin: 18px 0;
+      border: 2px solid #1e293b;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
+      margin: 16px 0;
       position: relative;
     }
 
-    .ticket-header {
-      background: linear-gradient(135deg, #0284c7, #0d9488);
-      color: white;
-      padding: 18px 20px;
-      text-align: center;
-      position: relative;
+    .scoot-header {
+      background: var(--scoot-yellow);
+      color: var(--scoot-navy);
+      padding: 14px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 2px solid var(--scoot-navy);
     }
 
-    .vip-badge {
-      display: inline-block;
-      background: linear-gradient(135deg, #f59e0b, #d97706);
-      color: #ffffff;
+    .scoot-logo-text {
+      font-weight: 900;
+      font-size: 22px;
+      font-style: italic;
+      letter-spacing: -0.03em;
+      color: var(--scoot-navy);
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .scoot-dot {
+      color: #f43f5e;
+      font-style: normal;
+    }
+
+    .scoot-pass-type {
+      background: var(--scoot-navy);
+      color: var(--scoot-yellow);
       font-size: 10px;
       font-weight: 900;
       padding: 4px 10px;
       border-radius: 99px;
-      letter-spacing: 0.1em;
-      margin-bottom: 6px;
-      box-shadow: 0 2px 8px rgba(245, 158, 11, 0.4);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
     }
 
-    .route-container {
+    .scoot-sub-header {
+      background: #0f172a;
+      color: #ffffff;
+      padding: 12px 18px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .scoot-sub-header span {
+      color: var(--scoot-yellow);
+      font-weight: 900;
+    }
+
+    .scoot-route-section {
+      padding: 18px;
+      background: #fafafa;
+      border-bottom: 2px dashed #cbd5e1;
+      position: relative;
+    }
+
+    /* Ticket Notch Cutouts */
+    .notch-left, .notch-right {
+      width: 18px;
+      height: 18px;
+      background: var(--card-bg);
+      border-radius: 50%;
+      position: absolute;
+      bottom: -9px;
+      border: 2px solid #1e293b;
+      z-index: 5;
+    }
+    .notch-left { left: -10px; }
+    .notch-right { right: -10px; }
+
+    .route-flex {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      margin-top: 8px;
     }
 
-    .city-code {
-      font-size: 24px;
+    .airport-box {
+      text-align: center;
+    }
+
+    .airport-code {
+      font-size: 32px;
       font-weight: 900;
-      letter-spacing: 0.05em;
+      color: #0f172a;
+      line-height: 1;
+      letter-spacing: 0.02em;
     }
 
-    .city-name {
+    .airport-city {
       font-size: 11px;
-      opacity: 0.85;
-      font-weight: 600;
-    }
-
-    .flight-path {
-      flex: 1;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      position: relative;
-      padding: 0 10px;
-    }
-
-    .plane-line {
-      width: 100%;
-      height: 2px;
-      background: rgba(255,255,255,0.4);
-      border-dasharray: 4px;
-    }
-
-    .plane-icon {
-      font-size: 18px;
-      position: absolute;
-      animation: flyPlane 3s ease-in-out infinite alternate;
-    }
-
-    @keyframes flyPlane {
-      from { transform: translateX(-15px); }
-      to { transform: translateX(15px); }
-    }
-
-    .ticket-body {
-      padding: 20px;
-    }
-
-    .ticket-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 14px;
-      margin-bottom: 14px;
-    }
-
-    .ticket-label {
-      font-size: 10px;
-      color: var(--text-muted);
-      text-transform: uppercase;
       font-weight: 700;
-      letter-spacing: 0.05em;
+      color: var(--text-muted);
+      margin-top: 4px;
     }
 
-    .ticket-val {
-      font-size: 14px;
-      font-weight: 800;
-      color: var(--text-main);
+    .airport-time {
+      font-size: 16px;
+      font-weight: 900;
+      color: #0284c7;
       margin-top: 2px;
     }
 
-    .price-tag {
-      background: linear-gradient(135deg, #ecfdf5, #d1fae5);
+    .flight-duration {
+      text-align: center;
+      flex: 1;
+      padding: 0 12px;
+    }
+
+    .duration-text {
+      font-size: 10px;
+      font-weight: 800;
+      color: var(--text-muted);
+      margin-bottom: 4px;
+      text-transform: uppercase;
+    }
+
+    .flight-line-graphic {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .flight-line-graphic::before {
+      content: '';
+      position: absolute;
+      width: 100%;
+      height: 2px;
+      background: #cbd5e1;
+      z-index: 1;
+    }
+
+    .plane-badge {
+      position: relative;
+      z-index: 2;
+      background: var(--scoot-yellow);
+      border: 1.5px solid #0f172a;
+      border-radius: 50%;
+      width: 28px;
+      height: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+    }
+
+    .scoot-body {
+      padding: 18px;
+      background: #ffffff;
+    }
+
+    .info-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px 16px;
+      margin-bottom: 14px;
+    }
+
+    .info-item {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .info-label {
+      font-size: 9px;
+      font-weight: 800;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    .info-value {
+      font-size: 13px;
+      font-weight: 800;
+      color: #0f172a;
+      margin-top: 2px;
+    }
+
+    .price-zero-badge {
+      background: #ecfdf5;
       border: 1.5px dashed #10b981;
-      padding: 14px;
-      border-radius: 16px;
+      border-radius: 14px;
+      padding: 12px;
       text-align: center;
       margin-top: 10px;
     }
 
-    .price-tag .amount {
+    .price-zero-badge .amount {
       font-size: 26px;
       font-weight: 900;
       color: #059669;
-      line-height: 1.1;
-      margin: 4px 0;
+      line-height: 1;
+      margin: 2px 0 4px;
     }
 
-    .price-tag .note {
-      font-size: 12px;
+    .price-zero-badge .subtext {
+      font-size: 11px;
       font-weight: 800;
       color: #047857;
+    }
+
+    .scoot-barcode-container {
+      margin-top: 14px;
+      padding-top: 12px;
+      border-top: 1px dashed #e2e8f0;
+      text-align: center;
+    }
+
+    .scoot-barcode {
+      height: 38px;
+      background: repeating-linear-gradient(
+        90deg,
+        #0f172a,
+        #0f172a 2px,
+        #ffffff 2px,
+        #ffffff 4px,
+        #0f172a 4px,
+        #0f172a 7px,
+        #ffffff 7px,
+        #ffffff 9px
+      );
+      border-radius: 4px;
+    }
+
+    .barcode-num {
+      font-family: monospace;
+      font-size: 10px;
+      letter-spacing: 0.2em;
+      color: var(--text-muted);
+      margin-top: 4px;
+      font-weight: 700;
     }
 
     .message-box {
@@ -324,23 +483,6 @@
       font-weight: 500;
     }
 
-    /* Barcode simulation */
-    .barcode-strip {
-      height: 30px;
-      background: repeating-linear-gradient(
-        90deg,
-        #1e293b,
-        #1e293b 2px,
-        #ffffff 2px,
-        #ffffff 5px,
-        #1e293b 5px,
-        #1e293b 9px
-      );
-      opacity: 0.75;
-      margin-top: 16px;
-      border-radius: 4px;
-    }
-
     .shake {
       animation: shake 0.3s ease-in-out;
     }
@@ -350,66 +492,285 @@
       25% { transform: translateX(-6px); }
       75% { transform: translateX(6px); }
     }
+
+    /* CUSTOM MODAL POPUPS */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(15, 23, 42, 0.65);
+      backdrop-filter: blur(6px);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 100;
+      padding: 20px;
+      animation: fadeIn 0.3s ease-out;
+    }
+
+    .modal-content {
+      background: #ffffff;
+      border-radius: 24px;
+      padding: 24px;
+      max-width: 380px;
+      width: 100%;
+      text-align: center;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+      border: 1px solid rgba(255, 255, 255, 0.8);
+      position: relative;
+    }
+
+    .modal-icon {
+      font-size: 48px;
+      margin-bottom: 12px;
+    }
+
+    .modal-title {
+      font-size: 20px;
+      font-weight: 900;
+      color: #0f172a;
+      margin-bottom: 10px;
+    }
+
+    .modal-body {
+      font-size: 15px;
+      color: #334155;
+      line-height: 1.55;
+      margin-bottom: 20px;
+      font-weight: 600;
+    }
+
+    /* LETTER SECTION & MODAL */
+    .letter-teaser-btn {
+      margin-top: 18px;
+      background: linear-gradient(135deg, #fff1f2, #ffe4e6);
+      border: 2px dashed #f43f5e;
+      border-radius: 20px;
+      padding: 16px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 14px rgba(244, 63, 94, 0.12);
+    }
+
+    .letter-teaser-btn:hover {
+      transform: translateY(-2px);
+      background: linear-gradient(135deg, #ffe4e6, #fecdd3);
+      box-shadow: 0 8px 20px rgba(244, 63, 94, 0.2);
+    }
+
+    .letter-teaser-title {
+      font-size: 16px;
+      font-weight: 900;
+      color: #e11d48;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+
+    .letter-teaser-sub {
+      font-size: 13px;
+      font-weight: 700;
+      color: #be123c;
+      margin-top: 4px;
+    }
+
+    .letter-card-content {
+      background: #fff8f8;
+      border: 2px solid #fecdd3;
+      border-radius: 20px;
+      padding: 22px;
+      text-align: left;
+      max-height: 70vh;
+      overflow-y: auto;
+      box-shadow: inset 0 2px 6px rgba(0,0,0,0.02);
+    }
+
+    .letter-header-title {
+      font-size: 22px;
+      font-weight: 900;
+      color: #e11d48;
+      text-align: center;
+      margin-bottom: 14px;
+    }
+
+    .letter-text-body {
+      font-size: 15px;
+      line-height: 1.65;
+      color: #4c0519;
+      font-weight: 500;
+    }
+
+    .letter-text-body p {
+      margin-bottom: 12px;
+    }
+
+    .letter-signature {
+      text-align: right;
+      font-weight: 800;
+      color: #be123c;
+      margin-top: 16px;
+      font-size: 16px;
+    }
   </style>
 </head>
 <body>
 
-  <!-- Floating Background Elements -->
-  <div class="bg-emoji" style="top: 10%; left: 8%;">🌴</div>
-  <div class="bg-emoji" style="top: 15%; right: 10%; animation-delay: 1s;">🌺</div>
-  <div class="bg-emoji" style="bottom: 12%; left: 12%; animation-delay: 2s;">✈️</div>
-  <div class="bg-emoji" style="bottom: 18%; right: 8%; animation-delay: 1.5s;">🍹</div>
+  <!-- Background Decorative Emojis -->
+  <div class="bg-emoji" style="top: 8%; left: 6%;">🌴</div>
+  <div class="bg-emoji" style="top: 12%; right: 8%; animation-delay: 1s;">🌺</div>
+  <div class="bg-emoji" style="bottom: 10%; left: 10%; animation-delay: 2s;">✈️</div>
+  <div class="bg-emoji" style="bottom: 16%; right: 6%; animation-delay: 1.5s;">🍹</div>
 
   <div class="container">
     
-    <!-- QUIZ CARD -->
+    <!-- QUIZ CONTAINER CARD -->
     <div id="quizCard" class="card">
       <div class="progress-bar-bg">
         <div id="progressFill" class="progress-bar-fill"></div>
       </div>
 
-      <!-- QUESTION 1 -->
+      <!-- QUESTION 1 (Date Input - Birthday) -->
       <div id="q1Section">
-        <div class="q-step">Question 1 of 3</div>
-        <h2>When was the first concert we attended together? 🎵</h2>
+        <div class="q-step">Question 1 of 7</div>
+        <h2>When is my birthday? 🎂</h2>
         <div class="date-input-group">
-          <input type="text" id="concertDateInput" placeholder="DD/MM/YYYY">
-          <div id="q1Error" class="error-msg">Oops! Double check the date and try again! 🙈</div>
+          <input type="text" id="birthdayDateInput" placeholder="DD/MM/YYYY">
+          <div id="q1Error" class="error-msg">Hmm, that doesn't look like my birthday! Try again! 😉</div>
         </div>
         <button class="primary-btn" onclick="checkQ1()">Next Question ➡️</button>
       </div>
 
-      <!-- QUESTION 2 -->
+      <!-- QUESTION 2 (Date Input - Concert) -->
       <div id="q2Section" class="hidden">
-        <div class="q-step">Question 2 of 3</div>
-        <h2>When is my birthday? 🎂</h2>
+        <div class="q-step">Question 2 of 7</div>
+        <h2>When was the first concert we attended together? 🎵</h2>
         <div class="date-input-group">
-          <input type="text" id="birthdayDateInput" placeholder="DD/MM/YYYY">
-          <div id="q2Error" class="error-msg">Hmm, that doesn't look like my birthday! Try again! 😉</div>
+          <input type="text" id="concertDateInput" placeholder="DD/MM/YYYY">
+          <div id="q2Error" class="error-msg">Oops! Double check the date and try again! 🙈</div>
         </div>
         <button class="primary-btn" onclick="checkQ2()">Next Question ➡️</button>
       </div>
 
-      <!-- QUESTION 3 -->
+      <!-- QUESTION 3 (MCQ - Movie) -->
       <div id="q3Section" class="hidden">
-        <div class="q-step">Question 3 of 3</div>
+        <div class="q-step">Question 3 of 7</div>
+        <h2>What is the first movie we watched together? 🍿🎬</h2>
+        <div class="mcq-group">
+          <label class="mcq-option" onclick="selectMcq('q3', 'exhuma', this)">
+            <input type="radio" name="q3" value="exhuma">
+            1. Exhuma 🎬👻
+          </label>
+          <label class="mcq-option" onclick="selectMcq('q3', 'haikyuu', this)">
+            <input type="radio" name="q3" value="haikyuu">
+            2. Haikyuu 🏐⚡
+          </label>
+          <div id="q3Error" class="error-msg">Hmm, remember our horror movie date? Try again! 🍿</div>
+        </div>
+        <button class="primary-btn" onclick="checkQ3()">Next Question ➡️</button>
+      </div>
+
+      <!-- QUESTION 4 (MCQ - Lost in Bali) -->
+      <div id="q4Section" class="hidden">
+        <div class="q-step">Question 4 of 7</div>
+        <h2>If we get lost in Bali, what would happen first? 🌴🧭</h2>
+        <div class="mcq-group">
+          <label class="mcq-option" onclick="selectMcq('q4', 'maps', this)">
+            <input type="radio" name="q4" value="maps">
+            A. Google Maps saves us 🗺️
+          </label>
+          <label class="mcq-option" onclick="selectMcq('q4', 'blame', this)">
+            <input type="radio" name="q4" value="blame">
+            B. We start blaming each other 😤
+          </label>
+          <label class="mcq-option" onclick="selectMcq('q4', 'food', this)">
+            <input type="radio" name="q4" value="food">
+            C. We find food instead 🍜
+          </label>
+          <label class="mcq-option" onclick="selectMcq('q4', 'adventure', this)">
+            <input type="radio" name="q4" value="adventure">
+            D. We somehow make it an adventure 🛵✨
+          </label>
+          <div id="q4Error" class="error-msg">Nope! We always make every lost situation an adventure! 🛵🌴</div>
+        </div>
+        <button class="primary-btn" onclick="checkQ4()">Next Question ➡️</button>
+      </div>
+
+      <!-- QUESTION 5 (MCQ - Meal) -->
+      <div id="q5Section" class="hidden">
+        <div class="q-step">Question 5 of 7</div>
+        <h2>Which is the meal we always had when we hangout? 🍲🔥</h2>
+        <div class="mcq-group">
+          <label class="mcq-option" onclick="selectMcq('q5', 'korean_bbq', this)">
+            <input type="radio" name="q5" value="korean_bbq">
+            1. Korean BBQ 🥩
+          </label>
+          <label class="mcq-option" onclick="selectMcq('q5', 'hotpot', this)">
+            <input type="radio" name="q5" value="hotpot">
+            2. Hotpot 🍲
+          </label>
+          <label class="mcq-option" onclick="selectMcq('q5', 'thai_bbq', this)">
+            <input type="radio" name="q5" value="thai_bbq">
+            3. Thai BBQ 🥩🔥
+          </label>
+          <label class="mcq-option" onclick="selectMcq('q5', 'japanese_food', this)">
+            <input type="radio" name="q5" value="japanese_food">
+            4. Japanese Food 🍣
+          </label>
+          <div id="q5Error" class="error-msg">Not quite! Think of our go-to food craving! 😋</div>
+        </div>
+        <button class="primary-btn" onclick="checkQ5()">Next Question ➡️</button>
+      </div>
+
+      <!-- QUESTION 6 (Date Input - First Hangout) -->
+      <div id="q6Section" class="hidden">
+        <div class="q-step">Question 6 of 7</div>
         <h2>When was our first hangout? ☕✨</h2>
         <div class="date-input-group">
           <input type="text" id="hangoutDateInput" placeholder="DD/MM/YYYY">
-          <div id="q3Error" class="error-msg">Think back to our first hangout date! Try again! 😉</div>
+          <div id="q6Error" class="error-msg">Think back to our first hangout date! Try again! 😉</div>
         </div>
-        <button class="primary-btn" onclick="checkQ3()">Reveal Surprise! 🎁</button>
+        <button class="primary-btn" onclick="checkQ6()">Next Question ➡️</button>
+      </div>
+
+      <!-- QUESTION 7 (MCQ - Final Surprise Question) -->
+      <div id="q7Section" class="hidden">
+        <div class="q-step">Question 7 of 7</div>
+        <h2>Ready for one last surprise? 👀</h2>
+        <div class="mcq-group">
+          <label class="mcq-option" onclick="selectMcq('q7', 'yes', this)">
+            <input type="radio" name="q7" value="yes">
+            A. YES! 🙋‍♀️
+          </label>
+          <label class="mcq-option" onclick="selectMcq('q7', 'obviously', this)">
+            <input type="radio" name="q7" value="obviously">
+            B. Obviously! 🙄
+          </label>
+          <label class="mcq-option" onclick="selectMcq('q7', 'wait', this)">
+            <input type="radio" name="q7" value="wait">
+            C. Stop making me wait! 😤
+          </label>
+          <label class="mcq-option" onclick="selectMcq('q7', 'reveal', this)">
+            <input type="radio" name="q7" value="reveal">
+            D. JUST REVEAL IT ALREADY! 💥
+          </label>
+          <div id="q7Error" class="error-msg">Pick an option to continue! 😉</div>
+        </div>
+        <button class="primary-btn" onclick="checkQ7()">Reveal Surprise! 🎁</button>
       </div>
     </div>
 
-    <!-- REVEAL CONTAINER WITH SCRATCH CANVAS -->
+    <!-- REVEAL CONTAINER WITH SCRATCH CANVAS OVERLAY -->
     <div id="revealWrapper" class="reveal-wrapper hidden">
       <canvas id="wipeCanvas"></canvas>
 
       <div id="revealCard" class="card">
-        <div style="text-align: center; margin-bottom: 14px;">
-          <span style="font-size: 44px;">🎂🎉✈️</span>
-          <h1 style="font-size: 24px; font-weight: 900; color: #0f172a; margin-top: 4px;">SURPRISE!!!</h1>
+        <div style="text-align: center; margin-bottom: 12px;">
+          <span style="font-size: 40px;">🎂🎉✈️</span>
+          <h1 style="font-size: 24px; font-weight: 900; color: #0f172a; margin-top: 2px;">SURPRISE!!!</h1>
           <p style="font-size: 13px; color: var(--text-muted); font-weight: 700;">Early Birthday Gift Unlocked 🎁</p>
         </div>
 
@@ -417,63 +778,140 @@
           I know you were expecting to pay for your own flight to Bali... but consider your flight ticket <strong>100% paid for by me!</strong> Early birthday present for you!🧳✈️❤️
         </div>
 
-        <div class="ticket-card">
-          <div class="ticket-header">
-            <div class="vip-badge">✨ Flight VOUCHER ✨</div>
-            <div class="route-container">
-              <div>
-                <div class="city-code">SIN</div>
-                <div class="city-name">Singapore</div>
+        <!-- REALISTIC SCOOT BOARDING TICKET -->
+        <div class="scoot-ticket">
+          <div class="scoot-header">
+            <div class="scoot-logo-text">scoot<span class="scoot-dot">.</span></div>
+            <div class="scoot-pass-type">E-BOARDING PASS</div>
+          </div>
+
+          <div class="scoot-sub-header">
+            <div>FLIGHT: <span>TR 262</span></div>
+            <div>STATUS: <span style="color: #4ade80;">CONFIRMED ✅</span></div>
+          </div>
+
+          <div class="scoot-route-section">
+            <div class="notch-left"></div>
+            <div class="notch-right"></div>
+            <div class="route-flex">
+              <div class="airport-box" style="text-align: left;">
+                <div class="airport-code">SIN</div>
+                <div class="airport-city">Singapore (T1)</div>
+                <div class="airport-time">16:05</div>
               </div>
-              <div class="flight-path">
-                <div class="plane-line"></div>
-                <div class="plane-icon">✈️</div>
+
+              <div class="flight-duration">
+                <div class="duration-text">2h 55m Direct</div>
+                <div class="flight-line-graphic">
+                  <div class="plane-badge">✈️</div>
+                </div>
               </div>
-              <div>
-                <div class="city-code">DPS</div>
-                <div class="city-name">Bali</div>
+
+              <div class="airport-box" style="text-align: right;">
+                <div class="airport-code">DPS</div>
+                <div class="airport-city">Bali (T1 Int'l)</div>
+                <div class="airport-time">19:00</div>
               </div>
             </div>
           </div>
 
-          <div class="ticket-body">
-            <div class="ticket-grid">
-              <div>
-                <div class="ticket-label">Passenger</div>
-                <div class="ticket-val">Oh Jing Ting</div>
+          <div class="scoot-body">
+            <div class="info-grid">
+              <div class="info-item">
+                <div class="info-label">Passenger Name</div>
+                <div class="info-value">Oh Jing Ting</div>
               </div>
-              <div>
-                <div class="ticket-label">Seat Class</div>
-                <div class="ticket-val" style="color: var(--primary);">Sponsored 🎁</div>
+              <div class="info-item">
+                <div class="info-label">Boarding Time</div>
+                <div class="info-value" style="color: #d97706;">15:20 HRS</div>
               </div>
-              <div>
-                <div class="ticket-label">Baggage Allowance</div>
-                <div class="ticket-val">Cabin Luggage (7kg)</div>
+              <div class="info-item">
+                <div class="info-label">Baggage Allowance</div>
+                <div class="info-value">Cabin Luggage (7kg)</div>
               </div>
-              <div>
-                <div class="ticket-label">Status</div>
-                <div class="ticket-val" style="color: #059669;">CONFIRMED ✅</div>
+              <div class="info-item">
+                <div class="info-label">Seat / Class</div>
+                <div class="info-value" style="color: var(--primary);">Sponsored 🎁</div>
               </div>
             </div>
 
-            <div class="price-tag">
-              <div class="ticket-label">Your Out-Of-Pocket Flight Cost</div>
+            <div class="price-zero-badge">
+              <div class="info-label" style="color: #047857;">Your Out-Of-Pocket Flight Cost</div>
               <div class="amount">$0.00</div>
-              <div class="note">✨ 100% Sponsored Early Birthday Present ✨</div>
+              <div class="subtext">✨ 100% Sponsored Early Birthday Present ✨</div>
             </div>
 
-            <div class="barcode-strip"></div>
+            <div class="scoot-barcode-container">
+              <div class="scoot-barcode"></div>
+              <div class="barcode-num">TR262-SIN-DPS-2024-OJT-VIP</div>
+            </div>
           </div>
         </div>
 
-        <button class="primary-btn" onclick="claimGift()">Claim My Free Flight Ticket! 🎁</button>
+        <button id="claimBtn" class="primary-btn" onclick="handleClaimClick()">Claim My Free Flight Ticket! 🎁</button>
+
+        <!-- BIRTHDAY LETTER TEASER BUTTON (UNLOCKED AFTER CLAIM) -->
+        <div id="letterSection" class="hidden">
+          <div class="letter-teaser-btn" onclick="openLetterModal()">
+            <div class="letter-teaser-title">✉️ One last thing... 💖</div>
+            <div class="letter-teaser-sub">Tap to open your birthday letter 💌</div>
+          </div>
+        </div>
       </div>
     </div>
 
   </div>
 
+  <!-- ERROR 404 CLAIM MODAL (JEALOUS / ANGRY HANDSOME GUY LOGIC) -->
+  <div id="errorModal" class="modal-overlay hidden">
+    <div class="modal-content">
+      <div class="modal-icon">😡😤🔥</div>
+      <div class="modal-title" style="color: #e11d48;">Claim Failed - Error 404 ❌</div>
+      <div class="modal-body">
+        Your free ticket could not be claimed. You should claim from your handsome guy.😡🔥😤 Please try again!
+      </div>
+      <button class="primary-btn" onclick="closeErrorModal()">Close & Try Again 🔄</button>
+    </div>
+  </div>
+
+  <!-- SUCCESS CLAIM MODAL -->
+  <div id="successModal" class="modal-overlay hidden">
+    <div class="modal-content">
+      <div class="modal-icon">🎉✈️🌴</div>
+      <div class="modal-title" style="color: #059669;">Claim Successful! ✅</div>
+      <div class="modal-body">
+        Your flight ticket to Bali (Scoot TR262) is officially <strong>100% CLAIMED!</strong><br><br>
+        Get ready for an amazing trip! 🌴🍹☀️
+      </div>
+      <button class="primary-btn" style="background: linear-gradient(135deg, #10b981, #047857);" onclick="closeSuccessModal()">Woohoo! Let's Go To Bali! 🏖️</button>
+    </div>
+  </div>
+
+  <!-- BIRTHDAY LETTER MODAL -->
+  <div id="letterModal" class="modal-overlay hidden">
+    <div class="modal-content" style="max-width: 420px; padding: 20px;">
+      <div class="letter-card-content">
+        <div class="letter-header-title">Happy Birthday, Jing Ting! 🎂✨💖</div>
+        <div class="letter-text-body">
+          <p>Dearest Jing Ting 🐒,</p>
+          <p>Happy early birthday! 🥳</p>
+          <p>I know your birthday isn't here yet, but I thought I'd give you a little surprise in advance.</p>
+          <p>Since we're already going to Bali together, I figured I'd make the trip a little more special. So here's your flight ticket — fully paid for! 😂✈️</p>
+          <p>I'm genuinely glad we got to reconnect. It's nice being able to spend time together again, whether it's going out for food, walking around, or just doing random things together.</p>
+          <p>I hope this trip gives us more fun memories, more stupid jokes, and more stories to laugh about afterwards.</p>
+          <p>Anyway, enough of the cheesy stuff. Prepare your appetite, and get ready for Bali! 🌴</p>
+          <p>Happy early birthday!</p>
+          <div class="letter-signature">
+            — Yuan Jie
+          </div>
+        </div>
+      </div>
+      <button class="primary-btn" style="margin-top: 16px;" onclick="closeLetterModal()">Close Letter 💌</button>
+    </div>
+  </div>
+
   <script>
-    // Web Audio Synthesizer Sound Effects (No external dependencies)
+    // Audio Synthesizer Effects
     const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 
     function playTone(freq, type = 'sine', duration = 0.15) {
@@ -491,9 +929,14 @@
     }
 
     function playSuccessChime() {
-      playTone(523.25, 'sine', 0.12); // C5
-      setTimeout(() => playTone(659.25, 'sine', 0.12), 100); // E5
-      setTimeout(() => playTone(783.99, 'sine', 0.2), 200); // G5
+      playTone(523.25, 'sine', 0.12);
+      setTimeout(() => playTone(659.25, 'sine', 0.12), 100);
+      setTimeout(() => playTone(783.99, 'sine', 0.2), 200);
+    }
+
+    function playErrorBuzzer() {
+      playTone(220, 'sawtooth', 0.2);
+      setTimeout(() => playTone(180, 'sawtooth', 0.25), 150);
     }
 
     function playCelebrationFanfare() {
@@ -503,23 +946,38 @@
       setTimeout(() => playTone(1046.50, 'triangle', 0.4), 360);
     }
 
-    // ANSWER CONSTANTS
+    // Question Answers Configuration
+    const CORRECT_BIRTHDAY_DATE = '08/01/2000';
     const CORRECT_CONCERT_DATE = '21/04/2024';
-    const CORRECT_BIRTHDAY_DATE = '08/01/2000'; // Jan 8, 2000
-    const CORRECT_HANGOUT_DATE = '27/01/2024';  // Jan 27, 2024
+    const CORRECT_MOVIE = 'exhuma';
+    const CORRECT_BALI = 'adventure';
+    const CORRECT_MEAL = 'thai_bbq';
+    const CORRECT_HANGOUT_DATE = '27/01/2024';
+
+    let selectedAnswers = {};
+    let hasAttemptedClaim = false;
+
+    function selectMcq(qKey, val, el) {
+      selectedAnswers[qKey] = val;
+      const options = el.parentElement.querySelectorAll('.mcq-option');
+      options.forEach(opt => opt.classList.remove('selected'));
+      el.classList.add('selected');
+      const radio = el.querySelector('input[type="radio"]');
+      if (radio) radio.checked = true;
+    }
 
     function checkQ1() {
-      const input = document.getElementById('concertDateInput').value.trim();
+      const input = document.getElementById('birthdayDateInput').value.trim();
       const cleanedInput = input.replace(/[\.-]/g, '/');
       const errorEl = document.getElementById('q1Error');
       const q1Box = document.getElementById('q1Section');
 
-      if (cleanedInput === CORRECT_CONCERT_DATE || cleanedInput === '21/4/2024') {
+      if (cleanedInput === CORRECT_BIRTHDAY_DATE || cleanedInput === '8/1/2000' || cleanedInput === '08/1/2000' || cleanedInput === '8/01/2000') {
         errorEl.style.display = 'none';
         playSuccessChime();
         document.getElementById('q1Section').classList.add('hidden');
         document.getElementById('q2Section').classList.remove('hidden');
-        document.getElementById('progressFill').style.width = '66.6%';
+        document.getElementById('progressFill').style.width = '28.56%';
       } else {
         errorEl.style.display = 'block';
         q1Box.classList.remove('shake');
@@ -529,17 +987,17 @@
     }
 
     function checkQ2() {
-      const input = document.getElementById('birthdayDateInput').value.trim();
+      const input = document.getElementById('concertDateInput').value.trim();
       const cleanedInput = input.replace(/[\.-]/g, '/');
       const errorEl = document.getElementById('q2Error');
       const q2Box = document.getElementById('q2Section');
 
-      if (cleanedInput === CORRECT_BIRTHDAY_DATE || cleanedInput === '8/1/2000' || cleanedInput === '08/1/2000' || cleanedInput === '8/01/2000') {
+      if (cleanedInput === CORRECT_CONCERT_DATE || cleanedInput === '21/4/2024') {
         errorEl.style.display = 'none';
         playSuccessChime();
         document.getElementById('q2Section').classList.add('hidden');
         document.getElementById('q3Section').classList.remove('hidden');
-        document.getElementById('progressFill').style.width = '100%';
+        document.getElementById('progressFill').style.width = '42.84%';
       } else {
         errorEl.style.display = 'block';
         q2Box.classList.remove('shake');
@@ -549,20 +1007,92 @@
     }
 
     function checkQ3() {
-      const input = document.getElementById('hangoutDateInput').value.trim();
-      const cleanedInput = input.replace(/[\.-]/g, '/');
       const errorEl = document.getElementById('q3Error');
       const q3Box = document.getElementById('q3Section');
 
-      if (cleanedInput === CORRECT_HANGOUT_DATE || cleanedInput === '27/1/2024') {
+      if (selectedAnswers['q3'] === CORRECT_MOVIE) {
         errorEl.style.display = 'none';
-        playCelebrationFanfare();
-        revealSurprise();
+        playSuccessChime();
+        document.getElementById('q3Section').classList.add('hidden');
+        document.getElementById('q4Section').classList.remove('hidden');
+        document.getElementById('progressFill').style.width = '57.12%';
       } else {
         errorEl.style.display = 'block';
         q3Box.classList.remove('shake');
         void q3Box.offsetWidth;
         q3Box.classList.add('shake');
+      }
+    }
+
+    function checkQ4() {
+      const errorEl = document.getElementById('q4Error');
+      const q4Box = document.getElementById('q4Section');
+
+      if (selectedAnswers['q4'] === CORRECT_BALI) {
+        errorEl.style.display = 'none';
+        playSuccessChime();
+        document.getElementById('q4Section').classList.add('hidden');
+        document.getElementById('q5Section').classList.remove('hidden');
+        document.getElementById('progressFill').style.width = '71.4%';
+      } else {
+        errorEl.style.display = 'block';
+        q4Box.classList.remove('shake');
+        void q4Box.offsetWidth;
+        q4Box.classList.add('shake');
+      }
+    }
+
+    function checkQ5() {
+      const errorEl = document.getElementById('q5Error');
+      const q5Box = document.getElementById('q5Section');
+
+      if (selectedAnswers['q5'] === CORRECT_MEAL) {
+        errorEl.style.display = 'none';
+        playSuccessChime();
+        document.getElementById('q5Section').classList.add('hidden');
+        document.getElementById('q6Section').classList.remove('hidden');
+        document.getElementById('progressFill').style.width = '85.68%';
+      } else {
+        errorEl.style.display = 'block';
+        q5Box.classList.remove('shake');
+        void q5Box.offsetWidth;
+        q5Box.classList.add('shake');
+      }
+    }
+
+    function checkQ6() {
+      const input = document.getElementById('hangoutDateInput').value.trim();
+      const cleanedInput = input.replace(/[\.-]/g, '/');
+      const errorEl = document.getElementById('q6Error');
+      const q6Box = document.getElementById('q6Section');
+
+      if (cleanedInput === CORRECT_HANGOUT_DATE || cleanedInput === '27/1/2024') {
+        errorEl.style.display = 'none';
+        playSuccessChime();
+        document.getElementById('q6Section').classList.add('hidden');
+        document.getElementById('q7Section').classList.remove('hidden');
+        document.getElementById('progressFill').style.width = '100%';
+      } else {
+        errorEl.style.display = 'block';
+        q6Box.classList.remove('shake');
+        void q6Box.offsetWidth;
+        q6Box.classList.add('shake');
+      }
+    }
+
+    function checkQ7() {
+      const errorEl = document.getElementById('q7Error');
+      const q7Box = document.getElementById('q7Section');
+
+      if (selectedAnswers['q7']) {
+        errorEl.style.display = 'none';
+        playCelebrationFanfare();
+        revealSurprise();
+      } else {
+        errorEl.style.display = 'block';
+        q7Box.classList.remove('shake');
+        void q7Box.offsetWidth;
+        q7Box.classList.add('shake');
       }
     }
 
@@ -573,7 +1103,7 @@
       initWipeGame();
     }
 
-    // WIPE / SCRATCH CANVAS GAME
+    // Scratch Card / Wipe Overlay Initialization
     let isDrawing = false;
     let wipedPercentage = 0;
     let canvasCleared = false;
@@ -586,7 +1116,6 @@
       canvas.width = container.offsetWidth;
       canvas.height = container.offsetHeight;
 
-      // Draw Gold/Pink Ribbon Wrapping Overlay
       const grad = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
       grad.addColorStop(0, '#f43f5e');
       grad.addColorStop(0.5, '#f59e0b');
@@ -594,14 +1123,13 @@
       ctx.fillStyle = grad;
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-      // Gold Sparkle Accents
       ctx.fillStyle = '#ffffff';
       ctx.font = 'bold 22px -apple-system, sans-serif';
       ctx.textAlign = 'center';
       ctx.fillText('🎁 YOUR SURPRISE IS HERE!', canvas.width / 2, canvas.height / 2 - 20);
       
       ctx.font = '14px -apple-system, sans-serif';
-      ctx.fillText('✨ Touch & wipe here to reveal your pass! ✨', canvas.width / 2, canvas.height / 2 + 15);
+      ctx.fillText('✨ Scratch & wipe here to reveal pass! ✨', canvas.width / 2, canvas.height / 2 + 15);
 
       ctx.globalCompositeOperation = 'destination-out';
 
@@ -646,7 +1174,6 @@
 
         playCelebrationFanfare();
 
-        // High Energy Confetti
         confetti({
           particleCount: 160,
           spread: 80,
@@ -655,15 +1182,52 @@
       }
     }
 
-    function claimGift() {
-      playCelebrationFanfare();
+    /* 2-STAGE CLAIM LOGIC */
+    function handleClaimClick() {
+      if (!hasAttemptedClaim) {
+        // First click: trigger error modal with angry/jealous guy vibes
+        playErrorBuzzer();
+        document.getElementById('errorModal').classList.remove('hidden');
+      } else {
+        // Second click: trigger successful claim modal with celebration
+        playCelebrationFanfare();
+        confetti({
+          particleCount: 220,
+          spread: 100,
+          origin: { y: 0.5 }
+        });
+        document.getElementById('successModal').classList.remove('hidden');
+      }
+    }
+
+    function closeErrorModal() {
+      document.getElementById('errorModal').classList.add('hidden');
+      hasAttemptedClaim = true;
+      const claimBtn = document.getElementById('claimBtn');
+      claimBtn.innerHTML = 'Try Again! 🔁';
+      claimBtn.style.background = 'linear-gradient(135deg, #d97706, #b45309)';
+    }
+
+    function closeSuccessModal() {
+      document.getElementById('successModal').classList.add('hidden');
+      // Reveal the birthday letter teaser section
+      document.getElementById('letterSection').classList.remove('hidden');
+    }
+
+    /* LETTER MODAL LOGIC */
+    function openLetterModal() {
+      playSuccessChime();
       confetti({
-        particleCount: 220,
-        spread: 100,
-        origin: { y: 0.5 }
+        particleCount: 80,
+        spread: 60,
+        origin: { y: 0.6 }
       });
-      alert("🎉 Flight claimed! Get ready for Bali! ✈️🍹");
+      document.getElementById('letterModal').classList.remove('hidden');
+    }
+
+    function closeLetterModal() {
+      document.getElementById('letterModal').classList.add('hidden');
     }
   </script>
 </body>
-</html>			
+</html>
